@@ -5,16 +5,9 @@ from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
 
-def clean_data(df: DataFrame) -> DataFrame:
-    """Clean transaction data by filtering invalid records.
-
-    Args:
-        df: Raw transactions DataFrame.
-
-    Returns:
-        Cleaned DataFrame.
-    """
-    df = df.filter(df['amount'] > 0)
+def clean_data(df):
+    df = df.na.drop(how='any')
+    df = df.filter(df['amount'].isNotNull())
     return df
 
 
