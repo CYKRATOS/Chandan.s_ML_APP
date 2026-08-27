@@ -37,3 +37,15 @@ def calculate_totals(df: DataFrame) -> DataFrame:
 def enrich_with_categories(df: DataFrame, categories_df: DataFrame) -> DataFrame:
     """Join transactions with product categories."""
     return df.join(categories_df, on="product_id", how="left")
+
+
+def segment_customers(df):
+    """RFM-based customer segmentation for MLAPP-1234."""
+    from pyspark.sql import functions as F
+    return df.withColumn(
+        "segment",
+        F.when(F.col("total_spend") > 10000, "Premium")
+         .when(F.col("total_spend") > 5000, "Gold")
+         .when(F.col("total_spend") > 1000, "Silver")
+         .otherwise("Bronze")
+    )
